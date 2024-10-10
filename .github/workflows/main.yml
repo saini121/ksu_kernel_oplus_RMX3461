@@ -1,33 +1,38 @@
-name: Build and Integrate Binary
+name: Build Kernel Module
 
 on:
   push:
     branches:
-      - main
+      - main  # Change to your default branch if different
+  pull_request:
 
 jobs:
-  build-integrate:
+  build:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout this repository
+    - name: Checkout code
       uses: actions/checkout@v2
 
-    - name: Clone GitLab repository
+    - name: Install Dependencies
       run: |
-        git clone --depth 1 --branch 14.0 https://gitlab.com/crdroidandroid/android_prebuilts_clang_host_linux-x86_clang-r487747c.git
-        cd android_prebuilts_clang_host_linux-x86_clang-r487747c
+        sudo apt update
+        sudo apt install -y build-essential git
 
-    - name: Build Binary
+    - name: Clone Kernel Source
       run: |
-        # Add the build commands specific to the repository
-        # Example: make or other build commands
-        echo "Build commands go here"
+        # Clone the kernel source
+        git clone https://android.googlesource.com/kernel/oplus/linux.git
+        cd linux
+        git checkout <branch_name>  # Checkout the appropriate branch
 
-    - name: Integrate Binary
+    - name: Build Kernel Module
       run: |
-        cd ..
-        mv android_prebuilts_clang_host_linux-x86_clang-r487747c/output_binary ./path/to/integrate/
-        git add ./path/to/integrate/output_binary
-        git commit -m "Add built binary from GitLab repository"
-        git push origin main
+        cd ksu_kernel_oplus_RMX3461  # Navigate to your kernel module directory
+        make -C ../linux M=$(PWD) modules  # Adjust the path if necessary
+
+    - name: Upload Kernel Module
+      uses: actions/upload-artifact@v2
+      with:
+        name: ksu_kernel_oplus_RMX3461
+        path: ksu_kernel_oplus_RMX3461/*.ko  # Adjust the pattern if different
