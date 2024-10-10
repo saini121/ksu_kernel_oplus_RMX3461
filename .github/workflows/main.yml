@@ -32,7 +32,7 @@ jobs:
         make -C ../linux M=$(PWD) modules  # Adjust the path if necessary
 
     - name: Upload Kernel Module
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3  # Update to the latest version
       with:
         name: ksu_kernel_oplus_RMX3461
         path: ksu_kernel_oplus_RMX3461/*.ko  # Adjust the pattern if different
