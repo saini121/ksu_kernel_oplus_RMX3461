@@ -21,18 +21,18 @@ jobs:
 
     - name: Clone Kernel Source
       run: |
-        # Clone the kernel source
-        git clone https://android.googlesource.com/kernel/oplus/linux.git
-        cd linux
-        git checkout <branch_name>  # Checkout the appropriate branch
+        # Update with the correct kernel source repository for your device
+        git clone https://github.com/Oppo/kernel_oplus.git  # Example URL
+        cd kernel_oplus
+        git checkout <branch_name>  # Replace with the correct branch name
 
     - name: Build Kernel Module
       run: |
         cd ksu_kernel_oplus_RMX3461  # Navigate to your kernel module directory
-        make -C ../linux M=$(PWD) modules  # Adjust the path if necessary
+        make -C ../kernel_oplus M=$(PWD) modules  # Adjust the path if necessary
 
     - name: Upload Kernel Module
-      uses: actions/upload-artifact@v3  # Update to the latest version
+      uses: actions/upload-artifact@v3
       with:
         name: ksu_kernel_oplus_RMX3461
         path: ksu_kernel_oplus_RMX3461/*.ko  # Adjust the pattern if different
